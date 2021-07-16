@@ -12,7 +12,8 @@ const getIvHex = () => CryptoJS.enc.Latin1.parse(baseCryptoCode);
 export const setBaseCryptoCode = (cryptoCode: string): void => {
     if (!cryptoCode) {return}
     if (cryptoCode.length % 4 !== 0) {
-        return console.warn('setBaseCryptoCode: cryptoCode 请传入16位私钥')
+        __DEV__ && console.warn('setBaseCryptoCode: cryptoCode 请传入16位私钥')
+        return
     }
     baseCryptoCode = cryptoCode
 }
@@ -29,7 +30,7 @@ export const getEncrypt = (key: any, cryptoCode?: string) => {
     try {
         key = JSON.stringify(key);
     } catch (e) {
-        console.warn(e);
+        __DEV__ && console.warn(e);
     }
     return CryptoJS.AES.encrypt(key, keyHex, {
         mode: CryptoJS.mode.CBC,
@@ -75,7 +76,11 @@ export const getDecrypt = (data: string) => {
  * @returns {string}
  */
 export const getDecryptByBase64 = (data: string) => {
-    let parsedWordArray = CryptoJS.enc.Base64.parse(data);
-    let decryptStr = parsedWordArray.toString(CryptoJS.enc.Utf8);
-    return getDecrypt(decryptStr);
+    try {
+        let parsedWordArray = CryptoJS.enc.Base64.parse(data);
+        let decryptStr = parsedWordArray.toString(CryptoJS.enc.Utf8);
+        return getDecrypt(decryptStr);       
+    } catch (error) {
+        return data
+    }
 }

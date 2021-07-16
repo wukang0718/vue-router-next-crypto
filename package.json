@@ -1,6 +1,6 @@
 {
   "name": "vue-router-next-crypto",
-  "version": "4.0.10",
+  "version": "1.0.1",
   "main": "dist/vue-router.cjs.js",
   "unpkg": "dist/vue-router.global.js",
   "jsdelivr": "dist/vue-router.global.js",
