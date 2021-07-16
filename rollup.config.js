@@ -66,6 +66,7 @@ function createConfig(format, output, plugins = []) {
   output.externalLiveBindings = false
   output.globals = {
     vue: 'Vue',
+    crypto: 'CryptoJS'
     // devtools are not global in iife
     // '@vue/devtools-api': 'VueDevtoolsApi',
   }

@@ -213,7 +213,6 @@ export function tokensToParser(
     const params: PathParams = {}
 
     if (!match) return null
-    console.log(match, keys);
     
     for (let i = 1; i < match.length; i++) {
       const value: string = match[i] || ''
@@ -226,7 +225,6 @@ export function tokensToParser(
   }
 
   function stringify(params: PathParams): string {
-    console.log('params', params, segments);
     
     let path = ''
     // for optional parameters to allow to be empty
