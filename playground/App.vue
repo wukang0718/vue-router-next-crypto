@@ -198,7 +198,7 @@ export default defineComponent({
     const viewName = ref('default')
 
     useLink({ to: '/' })
-    useLink({ to: '/documents/hello' })
+    useLink({ to: {name: 'docs', params: {id: 'hello'}} })
     useLink({ to: '/children' })
 
     const currentLocation = computed(() => {

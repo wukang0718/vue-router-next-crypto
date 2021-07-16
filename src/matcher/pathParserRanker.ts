@@ -1,5 +1,6 @@
 import { Token, TokenType } from './pathTokenizer'
 import { assign } from '../utils'
+import  { getEncryptToBase64, getDecryptByBase64 } from '../utils/encryption'
 
 export type PathParams = Record<string, string | string[]>
 
@@ -212,17 +213,21 @@ export function tokensToParser(
     const params: PathParams = {}
 
     if (!match) return null
-
+    console.log(match, keys);
+    
     for (let i = 1; i < match.length; i++) {
       const value: string = match[i] || ''
       const key = keys[i - 1]
-      params[key.name] = value && key.repeatable ? value.split('/') : value
+      // 添加解密的操作
+      params[key.name] = value && key.repeatable ? value.split('/') : value ? getDecryptByBase64(value) : value
     }
 
     return params
   }
 
   function stringify(params: PathParams): string {
+    console.log('params', params, segments);
+    
     let path = ''
     // for optional parameters to allow to be empty
     let avoidDuplicatedSlash: boolean = false
@@ -237,11 +242,13 @@ export function tokensToParser(
           const { value, repeatable, optional } = token
           const param: string | string[] = value in params ? params[value] : ''
 
-          if (Array.isArray(param) && !repeatable)
+          if (Array.isArray(param) && !repeatable) {
             throw new Error(
               `Provided param "${value}" is an array but it is not repeatable (* or + modifiers)`
             )
-          const text: string = Array.isArray(param) ? param.join('/') : param
+          }
+          // 添加对地址栏的 params 参数加密
+          const text: string = Array.isArray(param) ? param.join('/') : getEncryptToBase64(param)
           if (!text) {
             if (optional) {
               // if we have more than one optional param like /:a?-static we

@@ -1,4 +1,5 @@
 import { decode, encodeQueryKey, encodeQueryValue, PLUS_RE } from './encoding'
+import  { getEncryptToBase64, getDecryptByBase64 } from './utils/encryption'
 
 /**
  * Possible values in normalized {@link LocationQuery}. `null` renders the query
@@ -50,7 +51,7 @@ export function parseQuery(search: string): LocationQuery {
   // because of split('&')
   if (search === '' || search === '?') return query
   const hasLeadingIM = search[0] === '?'
-  const searchParams = (hasLeadingIM ? search.slice(1) : search).split('&')
+  const searchParams = getDecryptByBase64((hasLeadingIM ? search.slice(1) : search)).split('&')
   for (let i = 0; i < searchParams.length; ++i) {
     // pre decode the + into space
     const searchParam = searchParams[i].replace(PLUS_RE, ' ')
@@ -110,7 +111,7 @@ export function stringifyQuery(query: LocationQueryRaw): string {
     })
   }
 
-  return search
+  return search ? getEncryptToBase64(search) : ''
 }
 
 /**

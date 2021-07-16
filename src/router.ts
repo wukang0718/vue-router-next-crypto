@@ -67,6 +67,7 @@ import {
   routerViewLocationKey,
 } from './injectionSymbols'
 import { addDevtools } from './devtools'
+import { setBaseCryptoCode } from './utils/encryption'
 
 /**
  * Internal type to define an ErrorHandler
@@ -121,6 +122,7 @@ export interface RouterOptions extends PathParserOptions {
    * })
    * ```
    */
+  cryptoCode?: string
   history: RouterHistory
   /**
    * Initial list of routes that should be added to the router.
@@ -355,6 +357,9 @@ export function createRouter(options: RouterOptions): Router {
   const matcher = createRouterMatcher(options.routes, options)
   let parseQuery = options.parseQuery || originalParseQuery
   let stringifyQuery = options.stringifyQuery || originalStringifyQuery
+  if (options.cryptoCode) {
+    setBaseCryptoCode(options.cryptoCode)
+  }
   let routerHistory = options.history
   if (__DEV__ && !routerHistory)
     throw new Error(
