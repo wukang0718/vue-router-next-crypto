@@ -79,6 +79,9 @@ export const getDecryptByBase64 = (data: string) => {
     try {
         let parsedWordArray = CryptoJS.enc.Base64.parse(data);
         let decryptStr = parsedWordArray.toString(CryptoJS.enc.Utf8);
+        if (!decryptStr) {
+            return data
+        }
         return getDecrypt(decryptStr);       
     } catch (error) {
         return data
